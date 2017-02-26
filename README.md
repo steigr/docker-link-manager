@@ -5,7 +5,11 @@ This docker-image can be started by pipework, because the pipework dhcp support 
 # Usage
 
 ```shell
-pipework $(docker run --name=myapp-network --cap-add=net_admin --network=none --detach steigr/link-manager) 0/0
+pipework $(docker run --name=myapp-network \
+                      --cap-add=net_admin \
+                      --network=none \
+                      --detach \
+                      steigr/link-manager) 0/0
 docker run --rm --network=container:myapp-network myapp-container
 ```
 

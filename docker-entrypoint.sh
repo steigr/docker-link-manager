@@ -18,7 +18,7 @@ __bound() {
 	ip link set $interface up
 	ip addr add $ip/$mask dev $interface
 	echo "search $domain" > /etc/resolv.conf
-	echo "nameserver $dns" > /etc/resolv.conf
+	echo "nameserver $dns" >> /etc/resolv.conf
 	ip route add default via $router
 	echo $hostname > /etc/hostname
 	sed "/ $hostname/d" /etc/hosts > /etc/hosts.tmp
