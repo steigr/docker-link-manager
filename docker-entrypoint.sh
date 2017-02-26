@@ -21,8 +21,20 @@ __bound() {
 	echo "nameserver $dns" > /etc/resolv.conf
 	ip route add default via $router
 	echo $hostname > /etc/hostname
+	sed "/ $hostname/d" /etc/hosts > /etc/hosts.tmp
+	cat /etc/hosts.tmp > /etc/hosts
+	rm /etc/hosts.tmp
+	hstring="$ip"
+	test "$domain" && hstring="$hstring $hostname.$domain"
+	echo "$hstring $hostname" >> /etc/hosts
 	# requires CAP_SYS_ADMIN ( --cap-add=SYS_ADMIN )
-	hostname -F /etc/hostname || true
+	if hostname -F /etc/hostname; then
+		# obviously we have CAP_SYS_ADMIN
+		# so check all other pids with ppid==0 and
+		# apply the hostname too
+		find /proc -regex "/proc/[0-9]*/stat" -maxdepth 2 -mindepth 2 -exec awk '{ if(($4=="0")&&($1 > 1)) print $1}' '{}' ';' \
+		| xargs -I{} -n1 -r nsenter -m -u -t {} hostname -F /etc/hostname
+	fi
 }
 
 __renew() {
