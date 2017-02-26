@@ -18,7 +18,7 @@ __bound() {
 	ip link set $interface up
 	ip addr add $ip/$mask dev $interface
 	echo "search $domain" > /etc/resolv.conf
-	echo "nameserver $dns" > /etc/resolv.conf
+	echo "nameserver $dns" >> /etc/resolv.conf
 	ip route add default via $router
 	echo $hostname > /etc/hostname
 	# requires CAP_SYS_ADMIN ( --cap-add=SYS_ADMIN )
