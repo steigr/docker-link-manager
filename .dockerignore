@@ -1,4 +1,5 @@
 *
+!bin
 !usr
 !lib
 !docker-entrypoint.sh

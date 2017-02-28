@@ -1,5 +1,6 @@
 #!/bin/sh
 
+pidof tini </dev/null >/dev/null 2>&1 || exec tini "$0" "$@"
 test -z "$TRACE" || set -x
 
 __deconfig() {
@@ -32,7 +33,7 @@ __bound() {
 		# obviously we have CAP_SYS_ADMIN
 		# so check all other pids with ppid==0 and
 		# apply the hostname too
-		find /proc -regex "/proc/[0-9]*/stat" -maxdepth 2 -mindepth 2 -exec awk '{ if(($4=="0")&&($1 > 1)) print $1}' '{}' ';' \
+		find /proc -regex '/proc/[0-9]*' -type d -mindepth 1 -maxdepth 1 -exec awk '{ if(($4=="0")&&($1 > 1)) print $1}' '{}/stat' ';' \
 		| xargs -I{} -n1 -r nsenter -m -u -t {} hostname -F /etc/hostname
 	fi
 }
