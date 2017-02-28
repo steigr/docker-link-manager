@@ -1,5 +1,6 @@
 #!/bin/sh
 
+pidof tini </dev/null >/dev/null 2>&1 || exec tini "$0" "$@"
 test -z "$TRACE" || set -x
 
 __deconfig() {
